@@ -33,7 +33,7 @@ app.get<{}, MessageResponse>("/", (req, res) => {
 });
 
 app.post<{}, MessageResponse>("/apiFirebase/", async (req, res) => {
-  const { idToken } = req.body;
+  const { idToken, password } = req.body;
 
   if (!idToken) {
     return res.status(400).json({ message: "ID token is required" });
@@ -42,7 +42,7 @@ app.post<{}, MessageResponse>("/apiFirebase/", async (req, res) => {
   try {
     getAuth()
       .updateUser(idToken, {
-        password: "diego123",
+        password: password,
       })
       .then((userRecord) => {
         res.json({ message: JSON.stringify(userRecord.toJSON()) });
