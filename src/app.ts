@@ -40,10 +40,16 @@ app.post<{}, MessageResponse>("/apiFirebase/", async (req, res) => {
   }
 
   try {
-    getAuth().updateUser(idToken, {
-      password: "diego123",
-    });
-    res.json({ message: idToken });
+    getAuth()
+      .updateUser(idToken, {
+        password: "diego123",
+      })
+      .then((userRecord) => {
+        res.json({ message: "User updated" + userRecord.toJSON() });
+      })
+      .catch((error) => {
+        res.status(400).json({ message: "User not found" + error });
+      });
   } catch (error) {
     res.status(401).json({ message: "Invalid ID token" });
   }
