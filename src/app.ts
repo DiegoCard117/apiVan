@@ -1,28 +1,52 @@
-import express from 'express';
-import morgan from 'morgan';
-import helmet from 'helmet';
-import cors from 'cors';
+/* eslint-disable @typescript-eslint/quotes */
+import express from "express";
+import morgan from "morgan";
+import helmet from "helmet";
+import cors from "cors";
 
-import * as middlewares from './middlewares';
-import api from './api';
-import MessageResponse from './interfaces/MessageResponse';
+import * as middlewares from "./middlewares";
+import api from "./api";
+import MessageResponse from "./interfaces/MessageResponse";
 
-require('dotenv').config();
+import { initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+
+const appFirebase = initializeApp({
+  credential: require("./serviceAccountKey.json"),
+});
+
+require("dotenv").config();
 
 const app = express();
 
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.get<{}, MessageResponse>('/', (req, res) => {
+app.get<{}, MessageResponse>("/", (req, res) => {
   res.json({
-    message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
+    message: "Hello World!",
   });
 });
 
-app.use('/api/v1', api);
+app.post<{}, MessageResponse>("/apiFirebase/", async (req, res) => {
+  const { idToken } = req.body;
+
+  if (!idToken) {
+    return res.status(400).json({ message: "ID token is required" });
+  }
+
+  try {
+    const decodedToken = await getAuth(appFirebase).verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+    res.json({ message: uid });
+  } catch (error) {
+    res.status(401).json({ message: "Invalid ID token" });
+  }
+});
+
+app.use("/api/v1", api);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
