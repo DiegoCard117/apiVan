@@ -8,11 +8,11 @@ import * as middlewares from "./middlewares";
 import api from "./api";
 import MessageResponse from "./interfaces/MessageResponse";
 
-import { initializeApp } from "firebase-admin/app";
+import { cert, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 
 const appFirebase = initializeApp({
-  credential: require("./serviceAccountKey.json"),
+  credential: cert(require("./serviceAccountKey.json")),
 });
 
 require("dotenv").config();
