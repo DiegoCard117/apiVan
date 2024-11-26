@@ -43,7 +43,7 @@ app.post<{}, MessageResponse>("/apiFirebase/", async (req, res) => {
     getAuth().updateUser(idToken, {
       password: "diego123",
     });
-    res.json({ message: "ok" });
+    res.json({ message: idToken });
   } catch (error) {
     res.status(401).json({ message: "Invalid ID token" });
   }
