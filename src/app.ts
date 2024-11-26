@@ -8,12 +8,14 @@ import * as middlewares from "./middlewares";
 import api from "./api";
 import MessageResponse from "./interfaces/MessageResponse";
 
-import { cert, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
+import { getApps, initializeApp, cert } from "firebase-admin/app";
 
-const appFirebase = initializeApp({
-  credential: cert(require("./serviceAccountKey.json")),
-});
+if (!getApps().length) {
+  initializeApp({
+    credential: cert(require("../serviceAccountKey.json")),
+  });
+}
 
 require("dotenv").config();
 
@@ -38,9 +40,7 @@ app.post<{}, MessageResponse>("/apiFirebase/", async (req, res) => {
   }
 
   try {
-    const decodedToken = await getAuth(appFirebase).verifyIdToken(idToken);
-    const uid = decodedToken.uid;
-    res.json({ message: uid });
+    res.json({ message: "ok" });
   } catch (error) {
     res.status(401).json({ message: "Invalid ID token" });
   }
