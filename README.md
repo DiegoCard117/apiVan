@@ -1,59 +1,101 @@
-# Express API Starter with Typescript
+# 🚀 API UberVan
 
-How to use this template:
+API desenvolvida em Node.js usando Express e hospedada na Vercel. A API possui dois endpoints principais:
 
-```sh
-npx create-express-api --typescript --directory my-api-name
+Um endpoint básico de Hello World.
+Um endpoint que utiliza o SDK Admin do Firebase para alteração de senhas.
+
+## 🗂️ Estrutura do Projeto
+
+```plaintext
+Copiar código
+APIVAN/
+├── api/
+│ └── index.ts # Configuração do servidor na Vercel
+├── public/
+│ └── .gitkeep # Diretório público (para arquivos estáticos, se necessário)
+├── src/
+│ ├── api/
+│ │ ├── emojis.ts # Arquivo de exemplo com emojis (Hello World)
+│ │ ├── index.ts # Configuração principal dos endpoints
+│ ├── interfaces/ # Tipagens do projeto
+│ │ ├── app.ts
+│ │ ├── index.ts
+│ ├── middlewares.ts # Middlewares personalizados
+├── test/ # Arquivos de configuração e testes
+├── .env.sample # Exemplo do arquivo de variáveis de ambiente
+├── vercel.json # Configuração do deploy na Vercel
 ```
 
-Includes API Server utilities:
+## 🛠️ Endpoints
 
-* [morgan](https://www.npmjs.com/package/morgan)
-  * HTTP request logger middleware for node.js
-* [helmet](https://www.npmjs.com/package/helmet)
-  * Helmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!
-* [dotenv](https://www.npmjs.com/package/dotenv)
-  * Dotenv is a zero-dependency module that loads environment variables from a `.env` file into `process.env`
-* [cors](https://www.npmjs.com/package/cors)
-  * CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
+### 1. Hello World
 
-Development utilities:
+URL: /
+Método: GET
+Descrição: Endpoint básico que retorna uma mensagem de boas-vindas.
+Resposta:
+json
+Copiar código
+{
+"message": "Hello World!"
+}
 
-* [typescript](https://www.npmjs.com/package/typescript)
-  * TypeScript is a language for application-scale JavaScript.
-* [ts-node](https://www.npmjs.com/package/ts-node)
-  * TypeScript execution and REPL for node.js, with source map and native ESM support.
-* [nodemon](https://www.npmjs.com/package/nodemon)
-  * nodemon is a tool that helps develop node.js based applications by automatically restarting the node application when file changes in the directory are detected.
-* [eslint](https://www.npmjs.com/package/eslint)
-  * ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.
-* [typescript-eslint](https://typescript-eslint.io/)
-  * Tooling which enables ESLint to support TypeScript.
-* [jest](https://www.npmjs.com/package/jest)
-  * Jest is a delightful JavaScript Testing Framework with a focus on simplicity.
-* [supertest](https://www.npmjs.com/package/supertest)
-  * HTTP assertions made easy via superagent.
+### 2. Alteração de Senha do Usuário
 
-## Setup
+URL: /api/update-password
+Método: POST
+Descrição: Endpoint que utiliza o Firebase Admin SDK para alterar a senha de um usuário específico.
+Autenticação: Nenhuma (depende de como você configurou a API para acesso interno ou protegido por chave).
+Corpo da Requisição
+Envie um JSON com os seguintes campos:
 
+```json
+{
+  "idToken": "id_do_usuario",
+  "password": "nova_senha"
+}
+
+
+Exemplo de Requisição
+bash
+Copiar código
+POST /api/update-password HTTP/1.1
+Host: suaprojetohospedado.vercel.app
+Content-Type: application/json
+
+{
+"userId": "user123",
+"newPassword": "novaSenha123!"
+}
+
+Resposta de Sucesso
+{
+"success": true,
+"message": "Senha alterada com sucesso para o usuário user123."
+}
+
+Resposta de Erro
+{
+"success": false,
+"error": "Usuário não encontrado ou erro ao alterar a senha."
+}
 ```
-npm install
-```
 
-## Lint
+## 🚀 Hospedagem e Testes
 
-```
-npm run lint
-```
+### Hospedagem
 
-## Test
+A API está hospedada na Vercel, facilitando deploys rápidos e integrações contínuas. O arquivo vercel.json contém as configurações necessárias.
 
-```
-npm run test
-```
+### Testes com Postman
 
-## Development
+Todos os endpoints foram testados utilizando o Postman.
+Para reproduzir os testes:
+Execute as requisições simulando diferentes cenários (sucesso/erro).
 
-```
-npm run dev
-```
+## 🔧 Configuração do Firebase
+
+### A integração com o Firebase Admin SDK exige:
+
+Um arquivo de credenciais do serviço (serviceAccountKey.json).
